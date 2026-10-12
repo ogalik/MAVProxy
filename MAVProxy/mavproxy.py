@@ -273,6 +273,11 @@ class MPState(object):
             MPSetting('baudrate', int, opts.baudrate, 'baudrate for new links', range=(0, 10000000), increment=1),
             MPSetting('rtscts', bool, opts.rtscts, 'enable flow control'),
             MPSetting('select_timeout', float, 0.01, 'select timeout'),
+            MPSetting('rs485', bool, opts.rs485, 'wait for idle line before sending (half-duplex serial)'),
+            MPSetting('rs485_idle_bytes', int, 5, 'idle guard in byte-times', range=(0, 1000), increment=1),
+            MPSetting('rs485_idle_ms', float, 3.0, 'minimum idle guard (ms)', range=(0, 1000), increment=0.5),
+            MPSetting('rs485_max_wait_ms', float, 100.0, 'max wait for idle line (ms)', range=(0, 10000), increment=10),
+            MPSetting('rs485_jitter_ms', float, 2.0, 'random extra idle time (ms)', range=(0, 1000), increment=0.5),
 
             MPSetting('altreadout', int, 10, 'Altitude Readout',
                       range=(0, 100), increment=1, tab='Announcements'),
@@ -1590,6 +1595,7 @@ if __name__ == '__main__':
     parser.add_option("-c", "--continue", dest='continue_mode', action='store_true', default=False, help="continue logs")
     parser.add_option("--dialect", default="all", help="MAVLink dialect")
     parser.add_option("--rtscts", action='store_true', help="enable hardware RTS/CTS flow control")
+    parser.add_option("--rs485", action='store_true', default=False, help="half-duplex serial: wait for idle line before sending")
     parser.add_option("--moddebug", type=int, help="module debug level", default=0)
     parser.add_option("--mission", dest="mission", help="mission name", default=None)
     parser.add_option("--daemon", action='store_true', help="run in daemon mode, do not start interactive shell")

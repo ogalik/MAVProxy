@@ -28,6 +28,7 @@ else:
 
 from MAVProxy.modules.lib import mp_module
 from MAVProxy.modules.lib import mp_util
+from MAVProxy.modules.lib import half_duplex
 
 if mp_util.has_wxpython:
     from MAVProxy.modules.lib.mp_menu import MPMenuCallTextDialog
@@ -427,6 +428,9 @@ class LinkModule(mp_module.MPModule):
             return False
         if self.settings.rtscts:
             conn.set_rtscts(True)
+        if isinstance(conn, mavutil.mavserial):
+            # listen-before-talk for half-duplex links, enabled by "set rs485 1"
+            half_duplex.install(conn, self.settings)
         conn.mav.set_callback(self.master_callback, conn)
         if hasattr(conn.mav, 'set_send_callback'):
             conn.mav.set_send_callback(self.master_send_callback, conn)
